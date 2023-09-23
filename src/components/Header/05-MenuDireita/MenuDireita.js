@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from 'styled-components';
 import { FaShoppingCart } from 'react-icons/fa';
 import { CartItem } from "./CartItem/CartItem"
 
 export const Menu = styled.div`
+  flex-direction: column;
+  display: flex;
+  justify-content: start;
   background-color: rgba(38, 5, 81, 0.8); 
   position: fixed;
-  height: 80%;
+  height: 54%;
   top: 14%;
   right: 0px;
   width: 300px;
   animation: showSidebar 0.4s;
   overflow-y: auto;
-
+  padding: 10px;
   h4{
     text-align: start;
     color: white;
@@ -85,13 +88,60 @@ const IconeCarrinho = styled(FaShoppingCart)`
   color: white;
 `;
 
+const ComprarButton = styled.button`
+  margin-left: 16px; 
+  background-color: #007bff; 
+  color: #fff; 
+  padding: 10px; 
+  border: none; 
+  border-radius: 4px; 
+  font-size: 16px; 
+  width: 160px;
+  cursor: pointer; 
+  &:hover {
+    background-color: #0056b3; 
+  }
+
+  &:disabled {
+    background-color: #ccc; /* Cor de fundo quando o botão está desativado */
+    cursor: not-allowed; /* Cursor de não permitido quando o botão está desativado */
+  }
+`;
+
 export const CarrinhoDeCompras = (props) => {
   const [abreBurguer, setAbreBurguer] = useState(false);
+
   const toggleCarrinho = () => {
     setAbreBurguer(!abreBurguer);
   }
 
   const totalCart = props.carrinho.reduce((acumulador, item) => (item.preco * item.quantidade) + acumulador, 0);
+
+  // Função para salvar os dados no Local Storage
+  const salvarNoLocalStorage = (carrinho) => {
+    const carrinhoEmString = JSON.stringify(carrinho);
+    localStorage.setItem('carrinho', carrinhoEmString);
+    console.log(carrinhoEmString)
+  }
+
+  useEffect(() => {
+    const carrinhoSalvo = localStorage.getItem('carrinho');
+    if (carrinhoSalvo) {
+      const carrinho = JSON.parse(carrinhoSalvo);
+      props.setCarrinho(carrinho);
+    }
+  }, []); // Isso garante que o código seja executado apenas uma vez, quando o componente é montado.
+
+
+  const guardarDados = () => {
+    // Primeiro, atualize o estado do carrinho com os dados mais recentes
+    props.setCarrinho([...props.carrinho]);
+    // Em seguida, salve os dados no Local Storage
+    salvarNoLocalStorage(props.carrinho);
+
+    alert("Obrigado por comprar na SpaceKids, agora você será direcionado para forma de pagamento, obrigado!")
+  }
+
 
   return (
     <>
@@ -100,16 +150,19 @@ export const CarrinhoDeCompras = (props) => {
         <span className={props.carrinho.length > 0 ? "active" : ""}>{props.carrinho.length}</span>
         <p>Carrinho de Compras</p>
       </MenuDireita>
-      {abreBurguer && (<Menu>
-        {/* Renderize o CardItem aqui */}
-        <CartItem
-          key={props.item}
-          carrinho={props.carrinho}
-          setCarrinho={props.setCarrinho}
-        />
-        <h4>Resumo carrinho:</h4>
-        <h4>Total: R$ {totalCart.toFixed(2)}</h4>
-      </Menu>)}
+      {abreBurguer && (
+        <Menu>
+          {/* Renderize o CardItem aqui */}
+          <CartItem
+            key={props.item}
+            carrinho={props.carrinho}
+            setCarrinho={props.setCarrinho}
+          />
+          <h4>Resumo carrinho:</h4>
+          <h4>Total: R$ {totalCart.toFixed(2)}</h4>
+          <ComprarButton onClick={guardarDados}>Confirmar Compra</ComprarButton>
+        </Menu>
+      )}
     </>
   );
 }

@@ -10,7 +10,7 @@ const CardContainer = styled.div`
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 12px;
-    height: 420px;
+    height: 460px;
     width: 300px;
     gap: 8px;
     transition: transform 0.2s ease;
@@ -26,8 +26,8 @@ const CardContainer = styled.div`
     }
 
     img {
-        width: 100%;
-        height: 64%;
+        width: 96%;
+        height: 56%;
         border-radius: 10px;
         object-fit: cover;
     }

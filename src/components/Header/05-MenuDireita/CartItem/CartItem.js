@@ -30,7 +30,6 @@ const RemoveItem = styled(BsCartDash)`
   cursor: pointer;
 `;
 
-
 export const CartItem = (props) => {
 
     const excluirCard = (produto) => {
@@ -59,7 +58,6 @@ export const CartItem = (props) => {
                         <p>{item.titulo}</p>
                         <p>Quantidade: {item.quantidade}</p>
                         <p>Preço: {item.preco}</p>
-
                         <RemoveItem onClick={() => excluirCard(item)} />
                     </div>
                 </CartContainer>

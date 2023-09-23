@@ -12,7 +12,7 @@ export const SideBarContainer = styled.div`
   /* background-color: blue; */
   background-color: rgba(38, 5, 81, 0.8); 
   position: fixed;
-  height: 60%;
+  height: 54%;
   top: 14%;
   left: 0px;
   width: 300px;

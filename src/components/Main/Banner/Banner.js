@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import BannerIMG from "../../../assets-img/Logo/MainFoto.webp";
 
 export const BannerContainer = styled.section`
-  height: 120vh;
+  height: 90vh;
   width: 100%;
   display: flex;
   align-items: center;
@@ -61,9 +61,11 @@ export const BannerContainer = styled.section`
     }
 
         .textoBanner{
+        flex: 1;
         overflow-y: auto;
         width: 50%;
         gap: 60px;
+        height: 100%;
         h2 {
             font-size: 1.5rem; 
         }
@@ -76,14 +78,14 @@ export const BannerContainer = styled.section`
     @media only screen and (min-width: 480px) and (max-width: 768px){
         display: flex;
         flex-direction: column;
-        height: 160vh;
+        height: 100vh;
         .imageBanner{
             width: 100%;
-            height: 74%;
+            height: 50%;
         }
         .textoBanner{
             width: 100%;
-            height: 26%;
+            height: 50%;
             overflow-y: auto;
             gap: 10px;
             h2 {
@@ -98,23 +100,23 @@ export const BannerContainer = styled.section`
     @media only screen and (max-width: 480px){
         display: flex;
         flex-direction: column;
-        height: 180vh;
+        height: 90vh;
         
         .imageBanner{
             width: 100%;
-            height: 60%;
+            height: 50%;
         }
         .textoBanner{
             width: 100%;
-            height: 40%;
+            height: 50%;
             overflow-y: auto;
             gap: 10px;
             padding: 20px;
             h2 {
-            font-size: 1rem; 
+            font-size: 0.8rem; 
         }
         p {
-            font-size: 1rem; 
+            font-size: 0.8rem; 
             line-height: 1.5; /* Espaçamento entre linhas para melhor legibilidade */
         } 
         }
