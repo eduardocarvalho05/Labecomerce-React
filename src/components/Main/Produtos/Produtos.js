@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FakeApi } from '../../../services/FAKE API/Produtos/FakeApi';
 import CardProdutos from './CardProdutos/CardProdutos';
@@ -103,76 +103,46 @@ const ProdutosDiv = styled.section`
 `;
 
 const Produtos = (props) => {
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState('todos');
-    const [precoSelecionado, setPrecoSelecionado] = useState('todos');
-    const [termoPesquisa, setTermoPesquisa] = useState('');
-    const [itensFiltrados, setItensFiltrados] = useState(FakeApi);
-    const [minPrice, setMinPrice] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
+    const [minFilter, setMinFilter] = useState();
+    const [maxFilter, setMaxFilter] = useState();
+    const [tituloFilter, setTituloFilter] = useState("")
+    const [categoria, setCategoria] = useState("TodosProdutos")
+    const [ordenacao, setOrdenacao] = useState("TodosProdutos")
 
-    const filtrarPorTitulo = (termo) => {
-        setTermoPesquisa(termo);
-
-        const produtosFiltrados = FakeApi.filter((produto) =>
-            produto.titulo.toLowerCase().includes(termo.toLowerCase())
-        );
-
-        if (categoriaSelecionada !== 'todos') {
-            setItensFiltrados(produtosFiltrados.filter((produto) => produto.categoria === categoriaSelecionada));
-        } else {
-            setItensFiltrados(produtosFiltrados);
-        }
-    };
-
-    const filtrarPorPreco = (preco) => {
-        if (preco === 'todos') {
-            setItensFiltrados(FakeApi);
-        } else if (preco === 'menor') {
-            const produtosFiltrados = itensFiltrados.slice().sort((a, b) => a.preco - b.preco);
-            setItensFiltrados(produtosFiltrados);
-        } else if (preco === 'maior') {
-            const produtosFiltrados = itensFiltrados.slice().sort((a, b) => b.preco - a.preco);
-            setItensFiltrados(produtosFiltrados);
-        }
-        setPrecoSelecionado(preco);
-    };
-
-    const filtrarPorCategoria = (categoria) => {
-        setCategoriaSelecionada(categoria);
-
-        if (categoria === 'todos') {
-            if (termoPesquisa.trim() === '') {
-                setItensFiltrados(FakeApi);
+    const produtosFiltrados = FakeApi
+        .filter((item) => { // FILTRA PRECO MINIMO
+            if (minFilter > 0) {
+                return item.preco >= minFilter;
             } else {
-                setItensFiltrados(FakeApi.filter((produto) => produto.titulo.toLowerCase().includes(termoPesquisa.toLowerCase())));
+                return true; // Mostrar todos os produtos quando os campos de filtro estiverem vazios ou undefined
             }
-        } else {
-            const produtosFiltrados = FakeApi.filter((produto) => produto.categoria === categoria);
-            setItensFiltrados(produtosFiltrados);
-        }
-    };
-
-    const filtrarPorPrecoMinMax = () => {
-        const min = parseFloat(minPrice);
-        const max = parseFloat(maxPrice);
-
-        // Verifique se pelo menos um dos campos de preço possui um valor válido
-        if (!isNaN(min) || !isNaN(max)) {
-            const produtosFiltrados = FakeApi.filter((produto) => {
-                const preco = parseFloat(produto.preco);
-                return (isNaN(min) || preco >= min) && (isNaN(max) || preco <= max);
-            });
-
-            setItensFiltrados(produtosFiltrados);
-        } else {
-            // Se ambos os campos estiverem vazios, volte para o FakeApi
-            setItensFiltrados(FakeApi);
-        }
-    };
-
-    useEffect(() => {
-        filtrarPorPrecoMinMax();
-    }, [minPrice, maxPrice]);
+        })
+        .filter((item) => { // FILTRA PRECO MAXIMO
+            if (maxFilter > 0) {
+                return item.preco <= maxFilter;
+            } else {
+                return true;
+            }
+        })
+        .filter((produto) => {// FILTRA POR TITULO
+            return produto.titulo.toLowerCase().includes(tituloFilter.toLowerCase());
+        })
+        .filter((item) => {//FILTRA POR CATEGORIA
+            if (categoria !== "TodosProdutos") {
+                return item.categoria === categoria
+            } else {
+                return FakeApi
+            }
+        })
+        .sort((a, b) => {
+            if (ordenacao === "menor") {
+                return a.preco - b.preco; // Ordenar em ordem crescente de preço
+            } else if (ordenacao === "maior") {
+                return b.preco - a.preco; // Ordenar em ordem decrescente de preço
+            } else {
+                return 0; // Não realizar nenhuma ordenação
+            }
+        }); // ORDENAÇÃO
 
     return (
         <CardContainer>
@@ -182,51 +152,52 @@ const Produtos = (props) => {
                 <input
                     type="text"
                     placeholder="Buscar por nome..."
-                    value={termoPesquisa}
-                    onChange={(e) => filtrarPorTitulo(e.target.value)}
+                    value={tituloFilter} // Associe o valor do input ao estado tituloFilter
+                    onChange={(e) => setTituloFilter(e.target.value)} // Atualize o estado tituloFilter ao digitar no input
                 />
 
                 <input
                     type="number"
                     placeholder="Preço mínimo..."
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
+                    value={minFilter}
+                    onChange={(e) => setMinFilter(e.target.value)}
                 />
 
                 <input
                     type="number"
                     placeholder="Preço máximo..."
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
+                    value={maxFilter}
+                    onChange={(e) => setMaxFilter(e.target.value)}
                 />
-
                 <div className='divButton'>
                     <select
                         onChange={(e) => {
-                            filtrarPorPreco(e.target.value);
+                            setOrdenacao(e.target.value);
                         }}
-                        value={categoriaSelecionada === 'Brinquedos' ? precoSelecionado : 'todos'}
+                        value={ordenacao}
                     >
-                        <option value="todos">Preço: Todos</option>
+                        <option value="TodosProdutos">Preço: Todos</option>
                         <option value="menor">Preço: Menor para Maior</option>
                         <option value="maior">Preço: Maior para Menor</option>
                     </select>
 
                     <select
-                        onChange={(e) => filtrarPorCategoria(e.target.value)}
-                        value={categoriaSelecionada}
+                        onChange={(e) => setCategoria(e.target.value)}
+                        value={categoria}
                     >
-                        <option value="todos">Mostrar Todos</option>
+                        <option value="TodosProdutos">Mostrar Todos</option>
                         <option value="Brinquedos">Brinquedos</option>
                         <option value="Roupas">Roupas</option>
                         <option value="Jogos">Jogos</option>
                         <option value="Lego">Lego</option>
                     </select>
                 </div>
+
             </FiltroDiv>
             <ProdutosDiv>
+                {/* Renderizar produtosFiltrados em vez de produtosListados */}
                 <CardProdutos
-                    item={itensFiltrados}
+                    item={produtosFiltrados}
                     carrinho={props.carrinho}
                     setCarrinho={props.setCarrinho}
                 />
