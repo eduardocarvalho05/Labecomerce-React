@@ -23,7 +23,7 @@ const FiltroDiv = styled.section`
     border-radius: 16px;
     color: white;
     padding: 40px;
-    gap: 12px;
+    gap: 10px;
     margin: 10px;
     margin-right: 20px;
     margin-left: 20px;
@@ -47,8 +47,11 @@ const FiltroDiv = styled.section`
     }
 
     select {
-        margin: 0 10px;
-        padding: 10px 16px;
+        height: 50px;
+        width: 160px;
+        flex-direction: row;
+        gap: 10px;
+        margin: 6px 10px;
         font-size: 1rem;
         font-weight: bold;
         background-color: #007bff;
@@ -66,7 +69,7 @@ const FiltroDiv = styled.section`
     @media only screen and (min-width: 480px) and (max-width: 768px){
         display: flex;
         flex-direction: column;
-        height: 34vh;
+        height: 38vh;
         select {
             padding: 10px 10px;
             margin-top: 6px; /* Adiciona uma margem superior para separar os selects */
@@ -75,14 +78,19 @@ const FiltroDiv = styled.section`
 
     @media only screen and (max-width: 480px){
         display: flex;
+        align-items: center;
+        justify-content: center;
         flex-direction: column;
-        height: 30vh;
+        height: 36vh;
         h1 {
             font-size: 1.4rem;
         }
     
         select {
             font-size: 0.8rem;
+            display: block;
+            height: 40px;
+            width: 154px;
         }
 
         input{
@@ -134,7 +142,7 @@ const Produtos = (props) => {
                 return FakeApi
             }
         })
-        .sort((a, b) => {
+        .sort((a, b) => {// ORDENAÇÃO
             if (ordenacao === "menor") {
                 return a.preco - b.preco; // Ordenar em ordem crescente de preço
             } else if (ordenacao === "maior") {
@@ -142,7 +150,7 @@ const Produtos = (props) => {
             } else {
                 return 0; // Não realizar nenhuma ordenação
             }
-        }); // ORDENAÇÃO
+        });
 
     return (
         <CardContainer>
