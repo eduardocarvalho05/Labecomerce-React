@@ -115,7 +115,7 @@ export const CarrinhoDeCompras = (props) => {
     setAbreBurguer(!abreBurguer);
   }
 
-  const totalCart = props.carrinho.reduce((acumulador, item) => (item.preco * item.quantidade) + acumulador, 0);
+  const totalCart = props.carrinho.reduce((acumulador, item) => (item.preco * item.quantidade) + acumulador, 0); 
 
   // Função para salvar os dados no Local Storage
   const salvarNoLocalStorage = (carrinho) => {
